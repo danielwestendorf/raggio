@@ -1,0 +1,67 @@
+<div class="content">
+	<div class="title">NEW/UPDATED ACCOUNTS</div>
+	<div class="body">
+		<table>
+			<tr>
+				<th class="account">ACCOUNT</th>
+				<th class="account">USER'S NAME</th>
+				<th class="date">UPDATED AT</th>
+				<th class="createdBy">CREATED BY</th>
+				<th class="createdBy">EXPIRES ON</th>
+				<th class="comment">COMMENT</th>
+			</tr>
+			<% @updated_accounts.each do |user| %>
+				<tr>
+					<td class="account"><a href="/users/<%= user.id %>"><%= user.username %></a></td>
+					<td class="account"><%= user.user %></td>
+					<td class="date"><%= format(user.updated_at) %></td>
+					<td class="createdBy"><%= user.created_by %></td>
+					<td class="createdBy"><%= expire_format(user.expiration_date) %></td>
+					<td class="comment"><%= user.comment %></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>
+<div class="content">
+	<div class="title">
+		<form action="/stale" method="get"  id="staleForm" accept-charset="utf-8">
+			Accounts that have been stale for <input type="text" name="stale_cutoff" value="60" size="1" maxlength="4"/> days <input type="submit" value="FIND" class="submit"/>
+		</form>
+		FIND STALE ACCOUNTS
+	</div>
+	<div class="body">
+		<table id="stales">
+			<tr>
+				<th>ACCOUNT</th>
+				<th>TIME</th>
+				<th>NAS</th>
+				<th>SSID</th>
+			</tr>
+			<tbody>
+				<tr>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<div class="content">
+	<div class="title">RECENT AUTHENTICATION ATTEMPTS</div>
+	<div class="body">
+		<table>
+			<tr>
+				<th>ACCOUNT</th>
+				<th>TIME</th>
+				<th>REPLY</th>
+			</tr>
+			<% @recent_authentications.each do |id| %>
+			<% auth = History.get(id.id) %>
+				<tr>
+					<td><a href="/users/<%= auth.username %>"><%= auth.username %></a></td>
+					<td><%= format(DateTime.parse(auth.authdate)) %></td>
+					<td><%= auth.reply %></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>

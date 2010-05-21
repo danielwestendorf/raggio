@@ -1,0 +1,7 @@
+*~
+config/database.yml
+config/ldap.yml
+config/other.yml
+*.swp
+public/images/logo_custom.png
+public/images/500_custom.png

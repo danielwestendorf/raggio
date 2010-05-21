@@ -1,0 +1,57 @@
+<div class="content">
+	<div class="title">
+		<a class="button destroyUser" href="/mac_addresses/<%= @mac_address.id %>">DESTROY</a><a class="button" href="/mac_addresses/<%= @mac_address.id %>/edit">EDIT</a> 
+		MAC ADDRESS: <%= @mac_address.username %>
+	</div>
+	<div class="body">
+		<div class="details">
+			<b>Last Updated:</b> <%= format(@mac_address.updated_at) %><br/>
+			<b>User's Name:</b> <%= @mac_address.user %><br/>
+			<b>Created by:</b> <%= @mac_address.created_by %><br/>
+			<b>Expiration Date:</b> <%= expire_format(@mac_address.expiration_date) %> @ 12AM<br/>
+			<b>Total Downloaded:</b> <%= @download_total %><br/>
+			<b>Comment:</b> <%= @mac_address.comment %><br/>
+		</div>
+	</div>
+</div>
+<% if !@history.empty? %>
+<div class="content">
+	<div class="title">RECENT AUTHENTICATION ATTEMPTS</div>
+	<div class="body">
+		<table>
+			<tr>
+				<th class="account">MAC ADDRESS</th>
+				<th class="date">TIME</th>
+				<th class="comment">RESULT</th>
+			</tr>
+			<% @history.each do |auth| %>
+				<tr>
+					<td class="account"><%= auth.username %></td>
+					<td class="date"><%= format(DateTime.parse(auth.authdate)) %></td>
+					<td class="comment"><%= auth.reply %></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>
+<% end %>
+<% if !@accounting.empty? %>
+<div class="content">
+	<div class="title">RECENT ACCOUNTING LOGS</div>
+	<div class="body">
+		<div id="accounting">
+			<% @accounting.each do |a| %>
+				<div class="clearfix">
+					<span class="connected"><b>Connected:</b> <%= format(a.acctstarttime) %></span>
+					<span class="active"><b>Active:</b> <%= a.active %></span>
+					<span class="dataTransfered"><b>Data Transfered:</b> <%= a.total_transfered %></span>
+					<div class="details clearfix">
+						<span><b>NAS:</b> <%= a.nas %></span>&nbsp;<span><b>Downloaded:</b> <%= a.download %></span>&nbsp;<span><b>Uploaded:</b> <%= a.upload %></span>&nbsp;<span><b>Connected From:</b> <%= a.calledstationid %></span>
+						&nbsp;<span><b>Total Data Transfered:</b> <%= a.total_transfered %></span>&nbsp;<span><b>Assigned IP Address:</b> <%= a.framedipaddress %></span>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	</div>
+</div>
+<% end %>

@@ -1,0 +1,18 @@
+#search {
+	float: right;
+	margin: 0px;
+}
+
+#searchbar {
+	position: relative;
+	top: 14px;
+	right: 19px;
+	margin: 0;
+}
+
+#search .button {
+	position: relative;
+	top: 19px;
+	font-size: 16px;
+	padding: 3px;
+}

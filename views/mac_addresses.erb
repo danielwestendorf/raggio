@@ -1,0 +1,25 @@
+<div class="content">
+	<div class="title">
+		<a class="button" href="/mac_addresses/new">NEW MAC ADDRESS</a><%= @title %>		
+	</div>
+	<div class="body">
+		<table>
+			<tr>
+				<th class="account">MAC ADDRESS</th>
+				<th class="date">CREATED BY</th>
+				<th class="date">EXPIRES ON</th>
+				<th class="comment">COMMENT</th>
+				<th class="actions">ACTIONS</th>
+			</tr>
+			<% @mac_addresses.each do |mac_address| %>
+				<tr>
+					<td class="account"><%= mac_address.username %></td>
+					<td class="date"><%= mac_address.created_by %></td>
+					<td class="date"><%= expire_format(mac_address.expiration_date) %> @ 12PM</td>
+					<td class="comment"><%= mac_address.comment %></td>
+					<td><a href="/mac_addresses/<%= mac_address.id %>">SHOW</a> | <a href="/mac_addresses/<%= mac_address.id %>/edit">EDIT</a> | <a class="destroyUser" href="/mac_addresses/<%= mac_address.id %>">DESTROY</a></td>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>

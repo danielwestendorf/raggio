@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
+<html>
+	<head>
+		<title><%= settings.head_title %> -- <%= @title %></title>
+		<link rel="stylesheet" href="/css/style.css" type="text/css" media="screen"/>
+		<link rel="stylesheet" href="/css/jquery-ui.css" type="text/css" media="screen"/>
+		<!--[if gte IE 5]>
+			<link rel="stylesheet" href="/css/ie.css" type="text/css" media="screen"/>
+		<![endif]-->
+		<script type="text/javascript" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/js/raggio.js"></script>
+		<script type="text/javascript" src="/js/jquery.maskedinput.min.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/jquery-ui.min.js"></script>
+	</head>
+	<body>
+		<div id="header">
+			<p>
+				<img src="<%= settings.logo %>"/>
+			</p>
+			<div id="login">
+				<% if !session[:username] %>
+					<form action="/login" method="post" accept-charset="utf-8">
+						<span class="loginTitle">Username:</span> <input type="text" name="username"/> &nbsp;
+						<span class="loginTitle">Password:</span> <input type="password" name="password"/><input type="submit" value="Login"/>								
+					</form>
+				<% else %>
+					<div id="logout">
+						<a href="/logout">LOGOUT</a>
+					</div>
+				<% end %>
+			</div>
+		</div>
+		<div id="nav">
+			<div id="search">
+				<form action="/search" method="post" accept-charset="utf-8">
+					<input id="searchbar" type="text" name="search"/><input type="submit" class="button" value="SEARCH"/>
+				</form>
+			</div>
+			<a href="/dashboard">DASHBOARD</a>
+			<a href="/mac_addresses">MAC ADDRESSES</a>
+			<a href="/users">USER ACCOUNTS</a>
+		</div>
+		<% if flash[:error] %>
+			<div id="flash_error"><img src="/images/Delete.png"/><%= flash[:error] %></div>
+		<% elsif flash[:notice] %>
+			<div id="flash_notice"><img src="/images/Check.png"/><%= flash[:notice] %></div>
+		<% end %>
+		<%= yield %>
+		<br />
+		<% flash[:notice] = nil #make sure the flash is reset after being displayed %>
+	</body>
+</html>

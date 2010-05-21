@@ -1,0 +1,43 @@
+<div class="content">
+	<div class="title">
+		<a class="button" href="/users">CANCEL</a><%= @title %>
+	</div>
+	<div class="body clearfix">
+		<%= error_messages_for(@user) %>
+		<div id="hints">
+			<h3>HINTS</h3>
+			<ul>
+				<li>- The <b>password</b> must be six (6) characters long</li>
+				<li>- Set the <b>Expiration Date</b> to be the last day the user needs access. Accounts will be expired at 12AM daily</li>
+				<li>- Don't want the account to expire? Try setting the <b>Expiration Date</b> decades in the future <i>(i.e. 01/01/2100)</i></li>
+				<li>- Enter important details in the <b>Comment</b> section <i>(i.e. Help Request #123456, Visitor Joe Smith)</i></li>
+			</ul>
+		</div>
+		<form action="<%= @user.new? ? "/users" : "/users/edit" %>" method="post" accept-charset="utf-8">
+			<p>
+				<span class="label username">Username:</span> <input class="username" type="text" name="username" value="<%= @user.username if @user %>"/>
+			</p><br />
+			<p>
+				<span class="label user">User's Name:</span> <input class="user" type="text" name="user" value="<%= @user.user if @user %>"/>
+			</p><br />
+			<p>
+				<span class="label password">Password:</span> <input class="password" type="password" name="password" value="<%= @user.password if @user && @user.new?%>"/>
+			</p><br />
+			<p>
+				<span class="label password">Re-type Password:</span> <input class="password" type="password" name="repassword" value="<%= @user.repassword if @user %>"/>
+			</p><br />
+			<p>
+				<span class="label expiration">Expiration Date:</span> <input class="expiration" id="date" type="text" name="expiration_date" value="<%= expire_format(@user.expiration_date ||= DateTime.now) if @user %>"/> MM/DD/YY
+			</p><br />
+			<p>
+				<span class="label comment">Comment:</span> <textarea class="comment" name="comment" rows="4" cols="30"><%= @user.comment if @user %></textarea>
+			</p><br />
+			<% if @user && !@user.new? %>
+				<input name="id" type="hidden" value="<%= @user.id if @user %>" />
+			<% end %>
+			<p>
+				<input type="submit" class="submit" value="SAVE"/>
+			</p>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,12 @@
+---
+other:
+  head_title:       RADIUS Management                            #Title in the Header
+  dashboard_title:  RAGGIO -- SIMPLE RADIUS MANAGEMENT           #Title for the landing page
+  logo_url:         /images/logo.png                             #URL for your main logo -- should be 620px wide 95px tall placed in public/images
+  error_500_url:    /images/500.png                              #URL for a fun error 500 pages -- should be 250px wide placed in public/images
+  
+deploy:
+  app_server:       appserver                                    #The hostname or IP of the application server
+  app_name:         raggio                                       #The name of your applicaiton
+  git_repo:         ssh://git.yourdomain.com/raggio.git          #Location of your Git repo
+  deploy_path:      /var/www/apps/raggio                         #Path on the app_server where you want to deploy the application
