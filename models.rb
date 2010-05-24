@@ -78,23 +78,24 @@ class MacAddress
 	
 	before :save do
 		self.value = CONFIG['mac_password']
+    puts "created mac address"
 	end
 
 	before :destroy do
-    username = @username.gsub(/:/, "-").downcase
+    username = self.username.gsub(/:/, "-").downcase
 		Accounting.all(:username => username).each {|a| a.destroy}
 		History.all(:username => username).each {|h| h.destroy}
 	end
 	
-	def username=(new_username)
+	def username=(new_username) #Setter method to convert pretty mac address (00:00:00:00:00:00) to ugly freeradius format (00-00-00-00-00-00)
     attribute_set(:username, new_username.gsub(/:/, "-").downcase) if !new_username.empty?
   end
 
-  def username
+  def username #Getter method to pretty up the mac address format
     @username.gsub(/\-/, ":").upcase if @username
   end
 
-	def expiration_date=(new_expiration_date)
+	def expiration_date=(new_expiration_date) #convert to a datetime object in the correct format
 		attribute_set(:expiration_date, DateTime.strptime(new_expiration_date, "%m/%d/%Y")) if new_expiration_date.class == String && !new_expiration_date.empty? && new_expiration_date.match(/\d{1,2}\/\d{1,2}\/\d{4}$/)
 	end
 	
@@ -106,17 +107,17 @@ class MacAddress
 
 	private
 
-  def validate_username_format
+  def validate_username_format #Ensure correct format for Mac Address is used"
     @username.match(/^([0-9a-f]{2}([-]|$)){6}$/i) != nil ? true : [false, "Mac Address is not in the correct format"]
   end
 	
-	def validate_username_unique
+	def validate_username_unique #Ensure the username is unique -- search by ugly format with dashes
     username = @username.downcase.gsub(/:/, "-")
     v = MacAddress.count(:username => username)
     v > 0 ? [false, "There is already and entry for that Mac Address"] : true
   end
 
-	def expiration
+	def expiration #Validate expiration_date
 		@expiration_date && @expiration_date > (DateTime.now - 1) ? true : [false, "The expire date is in the past"]
 	end
 end
@@ -183,7 +184,7 @@ class Accounting
 	
 	def nas
 		return "Unknown" if @nasipaddress.empty?
-		h = Socket.getaddrinfo(@nasipaddress, nil)
+		h = Socket.getaddrinfo(@nasipaddress, nil) #Attempt to resolve the Hostname of the device
 		unless h[0].empty? && h[0][2].empty?
 			return h[0][2]
 		else

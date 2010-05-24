@@ -66,7 +66,7 @@ end
 #destroy
 delete '/mac_addresses' do
 	@mac_address = MacAddress.get(params[:id])
-	if @mac_address && @mac_address.destroy!
+	if @mac_address && @mac_address.destroy
 		flash[:notice] = "Successfully deleted MAC Address #{@mac_address.username}"
 	else
 		flash[:error] = "Deletetion of MAC Address unsuccessful."

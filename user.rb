@@ -70,7 +70,7 @@ end
 #destroy
 delete '/users' do
 	@user = User.get(params[:id])
-	if @user && @user.destroy!
+	if @user && @user.destroy
 		flash[:notice] = "Successfully deleted user #{@user.username}"
 	else
 		flash[:error] = "Deletetion of user unsuccessful."
