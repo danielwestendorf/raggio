@@ -1,10 +1,11 @@
 ---
-adapter:          mysql 	#The database adapter you're using
+adapter:          mysql 	    #The database adapter you're using
 hostname:         freeRADIUS 	#The host on which your FreeRADIUS database lives
-database:         radius 	#The name of the database FreeRADIUS is using
-username:         root		#The username to access your DB
-password:         		#The password to access your DB
-user_table:       radcheck	#The table you have FreeRADIUS configured to use for authentication -- default is radcheck
-mac_table:        radcheck	#The table you have FreeRADIUS configured to use for authentication, typically the same as the user_table -- default is radcheck
+database:         radius 	    #The name of the database FreeRADIUS is using
+username:         root		    #The username to access your DB
+password:         		        #The password to access your DB
+user_table:       radcheck	  #The table you have FreeRADIUS configured to use for authentication -- default is radcheck
+mac_table:        radcheck	  #The table you have FreeRADIUS configured to use for authentication, typically the same as the user_table -- default is radcheck
+mac_password:     nortel      #The password your NAS passes on to the FreeRADIUS Server when using MAC authentication
 history_table:    radpostauth	#The table you have FreeRADIUS configured to store authentication attempts -- default setup is radpostauth
 accounting_table: radacct	#The table you have FreeRADIUS configured to store accounting information -- default setup is radacct

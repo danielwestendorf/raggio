@@ -28,21 +28,13 @@ class User
 	attr_accessor :password, :repassword
 	
 	before :save do
-		self.value = Digest::MD5.hexdigest(self.password)
-		self.username.downcase!
+		@value = Digest::MD5.hexdigest(@password)
+		@username.downcase!
 	end
 	
 	before :destroy do
 		Accounting.all(:username => self.username).each {|a| a.destroy}
 		History.all(:username => self.username).each {|h| h.destroy}
-	end
-	
-	def username
-		if self.mac_address == true
-			return @username.gsub(/-/, ":").upcase
-		else
-			return @username
-		end
 	end
 	
 	def expiration_date=(new_expiration_date)
@@ -58,19 +50,11 @@ class User
 	private
 	
 	def password_repassword
-		if !self.new? && self.password.length < 1 || self.password == self.repassword
-			true
-		else
-			[false, "The passwords for this user do not match"]
-		end
+		!self.new? && @password.length < 1 || @password == @repassword ? true : [false, "The passwords for this user do not match"]
 	end
 	
 	def expiration
-		if self.expiration_date && self.expiration_date > (DateTime.now - 1)
-			true
-		else
-			[false, "The expire date is in the past"]
-		end
+		@expiration_date && @expiration_date > (DateTime.now - 1) ? true : [false, "The expire date is in the past"]
 	end
 	
 end
@@ -93,42 +77,46 @@ class MacAddress
 	storage_names[:default] = CONFIG['mac_table']
 	
 	before :save do
-		self.username.downcase!
-		self.username.gsub!(/:/, "-")
-		self.value = "nortel"
+		self.value = CONFIG['mac_password']
 	end
-	
+
 	before :destroy do
 		Accounting.all(:username => self.username).each {|a| a.destroy}
 		History.all(:username => self.username).each {|h| h.destroy}
 	end
 	
-	def username
-		if @mac_address == true
-			return @username.gsub(/\-/, ":").upcase
-		else
-			return @username
-		end
-	end
-	
+	def username=(new_username)
+    attribute_set(:username, new_username.gsub(/:/, "-").downcase) if !new_username.empty?
+  end
+
+  def username
+    @username.gsub(/\-/, ":").upcase if @username
+  end
+
 	def expiration_date=(new_expiration_date)
 		attribute_set(:expiration_date, DateTime.strptime(new_expiration_date, "%m/%d/%Y")) if new_expiration_date.class == String && !new_expiration_date.empty? && new_expiration_date.match(/\d{1,2}\/\d{1,2}\/\d{4}$/)
 	end
 	
-	validates_is_unique :username, :message => "There is already an entry for that MAC Address"
 	validates_present :username, :message => "A MAC Address is required"
 	validates_present :user, :message => "You must specify the name of the person who this account belongs to"
 	validates_with_method :expiration
-	
+  validates_with_method :validate_username_unique
+  validates_with_method :validate_username_format
+
 	private
+
+  def validate_username_format
+    @username.match(/^([0-9a-f]{2}([-]|$)){6}$/i) != nil ? true : [false, "Mac Address is not in the correct format"]
+  end
 	
-	
+	def validate_username_unique
+    username = @username.downcase.gsub(/:/, "-")
+    v = MacAddress.count(:username => username)
+    v > 0 ? [false, "There is already and entry for that Mac Address"] : true
+  end
+
 	def expiration
-		if self.expiration_date && self.expiration_date > (DateTime.now - 1)
-			true
-		else
-			[false, "The expire date is in the past"]
-		end
+		@expiration_date && @expiration_date > (DateTime.now - 1) ? true : [false, "The expire date is in the past"]
 	end
 end
 
