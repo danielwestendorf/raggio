@@ -81,8 +81,9 @@ class MacAddress
 	end
 
 	before :destroy do
-		Accounting.all(:username => self.username).each {|a| a.destroy}
-		History.all(:username => self.username).each {|h| h.destroy}
+    username = @username.gsub(/:/, "-").downcase
+		Accounting.all(:username => username).each {|a| a.destroy}
+		History.all(:username => username).each {|h| h.destroy}
 	end
 	
 	def username=(new_username)
