@@ -26,7 +26,11 @@ function getStales() {
 			$(json).each(function() {
 				date = Date.parse(this.acctstarttime.split("T").join(" ").substring(0,19)).toString('MM/d/yyyy @ hh:mm:tt')
 				ssid = this.calledstationid.split("@")[0]
-				table.append('<tr class="hidden"><td><a href="/users/'+this.username+'">'+this.username.toUpperCase()+'</a></td><td>'+date+'</td><td>'+this.nas+'</td><td>'+ssid+'</td></tr>')
+        var username = this.username
+        if (username.match(/^([0-9a-f]{2}([-]|$)){6}$/i)){
+          username = username.replace(/-/g, ":").toUpperCase()
+        }
+				table.append('<tr class="hidden"><td><a href="/users/'+username+'">'+username+'</a></td><td>'+date+'</td><td>'+this.nas+'</td><td>'+ssid+'</td></tr>')
 			})
 			showRows('#stales tr.hidden')
 		}

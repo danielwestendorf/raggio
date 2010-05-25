@@ -12,7 +12,7 @@
 			</tr>
 			<% @updated_accounts.each do |user| %>
 				<tr>
-					<td class="account"><a href="/users/<%= user.id %>"><%= user.username %></a></td>
+					<td class="account"><a href="/users/<%= user.id %>"><%= user.username unless user.mac_address %><%= user.username.gsub(/-/, ":").upcase if user.mac_address %></a></td>
 					<td class="account"><%= user.user %></td>
 					<td class="date"><%= format(user.updated_at) %></td>
 					<td class="createdBy"><%= user.created_by %></td>
