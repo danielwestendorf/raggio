@@ -3,5 +3,6 @@ config/database.yml
 config/ldap.yml
 config/other.yml
 *.swp
+*.swo
 public/images/logo_custom.png
 public/images/500_custom.png
