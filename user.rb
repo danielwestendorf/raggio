@@ -8,7 +8,7 @@ end
 #index
 get '/users' do
 	@title = "USER ACCOUNTS"
-	@users = User.all(:mac_address => false)
+	@users = User.all(:mac_address => false, :order => [:username.asc])
 	erb :users
 end
 

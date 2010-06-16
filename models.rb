@@ -113,8 +113,8 @@ class MacAddress
 	
 	def validate_username_unique #Ensure the username is unique -- search by ugly format with dashes
     username = @username.downcase.gsub(/:/, "-")
-    v = MacAddress.count(:username => username)
-    v > 0 ? [false, "There is already and entry for that Mac Address"] : true
+    mac_address = MacAddress.first(:username => username)
+    mac_address && mac_address.id != @id ? [false, "There is already and entry for that Mac Address"] : true
   end
 
 	def expiration #Validate expiration_date

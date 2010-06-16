@@ -8,7 +8,7 @@ end
 #index
 get '/mac_addresses' do
 	@title = "MAC ADDRESSES"
-	@mac_addresses = MacAddress.all(:mac_address => true)
+	@mac_addresses = MacAddress.all(:mac_address => true, :order => [:username.asc])
 	erb :mac_addresses
 end
 
