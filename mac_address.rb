@@ -19,9 +19,9 @@ get '/mac_addresses/:id' do
 		flash[:error] = "MAC Address not found"
 		redirect '/mac_addresses'
 	else
-		@download_total = Accounting.new(:acctoutputoctets => Accounting.sum(:acctoutputoctets, :username => @mac_address.username)).download
+		@download_total = Accounting.new(:acctoutputoctets => Accounting.sum(:acctoutputoctets, :username => @mac_address.username.downcase)).download
 		@history = History.all(:username => @mac_address.username.gsub(/:/, "-"), :order => [:authdate.desc], :limit => 10)
-		@accounting = Accounting.all(:username => @mac_address.username, :order => [:acctstarttime.desc], :limit => 30) #get all the recent accounting logs
+		@accounting = Accounting.all(:username => @mac_address.username.gsub(/:/, "-").downcase, :order => [:acctstarttime.desc], :limit => 30) #get all the recent accounting logs
 		erb :mac_address_show
 	end
 end
