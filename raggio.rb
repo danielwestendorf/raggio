@@ -140,6 +140,6 @@ error do
 	erb :error_500
 end
 
-require 'user.rb'
-require 'mac_address.rb'
+require File.dirname(__FILE__) + 'user.rb'
+require File.dirname(__FILE__) + 'mac_address.rb'
 
