@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'sinatra'
 require 'yaml'
-require 'lib/active_directory_user'
-require 'models'
+require File.dirname(__FILE__) + '/lib/active_directory_user'
+require File.dirname(__FILE__) + '/models'
 require 'rack-flash'
 
 enable :sessions
