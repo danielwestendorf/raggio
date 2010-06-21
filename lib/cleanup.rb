@@ -1,6 +1,6 @@
 #this clean up task will be run via a cron job every night at 2400
 require 'rubygems'
-require File.dirname(__FILE__) + '/../raggio.rb'
+require File.dirname(__FILE__) + '/../models.rb'
 
 users = User.all(:expiration_date.lt => DateTime.now)
 
