@@ -33,6 +33,10 @@
 #   user.flanderized_first_name # => "Ernie-diddly"
 #   user.groups     # => ["Mac Users", "Geeks", "Ruby Coders", ... ]
 
+require 'rubygems'
+require 'bundler'
+require 'yaml'
+Bundler.setup
 require 'net/ldap' # gem install ruby-net-ldap
 
 class ActiveDirectoryUser
@@ -42,7 +46,7 @@ class ActiveDirectoryUser
   PORT = config['port']                    # Active Directory server port (default 389)
   BASE = config['base']    # Base to search from
   DOMAIN = config['domain']        # For simplified user@domain format login
-  set :admin_group, config['admin_group']
+  ADMIN_GROUP = config['admin_group']
 
   # ATTR_SV is for single valued attributes only. Generated readers will
   # convert the value to a string before returning or calling your Proc.
@@ -97,8 +101,9 @@ class ActiveDirectoryUser
     self.first_name + ' ' + self.last_name
   end
 
-  def member_of?(group)
-    self.groups.include?(group)
+  def member_of?
+    self.groups.include?(ADMIN_GROUP)
+  
   end
 
   private

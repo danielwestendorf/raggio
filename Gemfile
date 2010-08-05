@@ -1,0 +1,11 @@
+source :gemcutter
+gem "dm-core"
+gem "sinatra"
+gem "dm-mysql-adapter"
+gem "dm-timestamps"
+gem "dm-migrations"
+gem "net-ldap"
+gem "rack-flash"
+gem 'dm-validations'
+gem 'dm-aggregates'
+gem 'dm-serializer'

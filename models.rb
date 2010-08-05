@@ -1,37 +1,43 @@
+require 'rubygems'
+require 'bundler'
+Bundler.setup
 require 'dm-core'
 require 'dm-validations'
 require 'digest/md5'
 require 'dm-aggregates'
 require 'dm-serializer'
+require 'dm-migrations'
 
 CONFIG = YAML::load(File.read(File.dirname(__FILE__) + '/config/database.yml'))
-set :history_table, CONFIG['history_table']
+begin; set :history_table, CONFIG['history_table']; rescue; end;
+
+DataMapper::Logger.new($stdout, :debug)
 
 DataMapper.setup(:default, "#{CONFIG['adapter']}://#{CONFIG['username']}:#{CONFIG['password']}@#{CONFIG['hostname']}/#{CONFIG['database']}")
 
 class User
 	include DataMapper::Resource
 	
-	property :id,								Serial, :key => true
+	property :id,					Serial, :key => true
 	property :username, 				String, :index => :unique
-	property :user,							String, :index => :unique
+	property :user,					String, :index => :unique
 	property :attribute,				String, :default => "MD5-Password"
-	property :op,								String, :default => ":="
-	property :value, 						String
-	property :expiration_date,	DateTime
+	property :op,					String, :default => ":="
+	property :value, 				String, :lazy => false
+	property :expiration_date,			DateTime
 	property :updated_at,				DateTime
 	property :created_by,				String, :index => :unique
-	property :comment,					Text, :lazy => false, :index => :unique
-	property :mac_address,			Boolean, :default => false, :index => :unique
+	property :comment,				Text, :lazy => false, :index => :unique
+	property :mac_address,				Boolean, :default => false, :index => :unique
 	
 	storage_names[:default] = CONFIG['user_table']
 	attr_accessor :password, :repassword
 	
 	before :save do
-		@value = Digest::MD5.hexdigest(@password)
+		attribute_set(:value, Digest::MD5.hexdigest(@password))
 		@username.downcase!
 	end
-	
+
 	before :destroy do
 		Accounting.all(:username => self.username).each {|a| a.destroy}
 		History.all(:username => self.username).each {|h| h.destroy}
@@ -41,16 +47,16 @@ class User
 		attribute_set(:expiration_date, DateTime.strptime(new_expiration_date, "%m/%d/%Y")) if new_expiration_date.class == String && !new_expiration_date.empty? && new_expiration_date.match(/\d{1,2}\/\d{1,2}\/\d{4}$/)
 	end
 	
-	validates_is_unique :username, :message => "There is already a user with that username"
-	validates_present :username, :message => "A username is required"
+	validates_uniqueness_of :username, :message => "There is already a user with that username"
+	validates_presence_of :username, :message => "A username is required"
 	validates_with_method :password_repassword
 	validates_with_method :expiration
-	validates_length :password, :min => 6, :message => "The password needs at least 6 characters", :if => Proc.new {|u| u.new? || ( !u.new? && u.password.length != 0)}
+	validates_length_of :password, :min => 6, :message => "The password needs at least 6 characters", :if => Proc.new {|u| u.new? || ( !u.new? && u.password.length > 0)}
 	
 	private
 	
 	def password_repassword
-		!self.new? && @password.length < 1 || @password == @repassword ? true : [false, "The passwords for this user do not match"]
+		(!self.new? && @password.length < 1) || @password == @repassword ? true : [false, "The passwords for this user do not match"]
 	end
 	
 	def expiration
@@ -62,27 +68,26 @@ end
 class MacAddress
 	include DataMapper::Resource
 	
-	property :id,								Serial, :key => true
-	property :username, 				String
-	property :user,							String
-	property :attribute,				String, :default => "Cleartext-Password"
-	property :op,								String, :default => ":="
-	property :value, 						String
-	property :expiration_date,	DateTime
-	property :updated_at,				DateTime
-	property :created_by,				String
-	property :comment,					Text, :lazy => false
+	property :id,				Serial, :key => true
+	property :username, 			String
+	property :user,				String
+	property :attribute,			String, :default => "Cleartext-Password"
+	property :op,				String, :default => ":="
+	property :value, 			String
+	property :expiration_date,		DateTime
+	property :updated_at,			DateTime
+	property :created_by,			String
+	property :comment,			Text, :lazy => false
 	property :mac_address,			Boolean, :default => true
 	
 	storage_names[:default] = CONFIG['mac_table']
 	
 	before :save do
 		self.value = CONFIG['mac_password']
-    puts "created mac address"
 	end
 
 	before :destroy do
-    username = self.username.gsub(/:/, "-").downcase
+		username = self.username.gsub(/:/, "-").downcase
 		Accounting.all(:username => username).each {|a| a.destroy}
 		History.all(:username => username).each {|h| h.destroy}
 	end
@@ -99,11 +104,11 @@ class MacAddress
 		attribute_set(:expiration_date, DateTime.strptime(new_expiration_date, "%m/%d/%Y")) if new_expiration_date.class == String && !new_expiration_date.empty? && new_expiration_date.match(/\d{1,2}\/\d{1,2}\/\d{4}$/)
 	end
 	
-	validates_present :username, :message => "A MAC Address is required"
-	validates_present :user, :message => "You must specify the name of the person who this account belongs to"
+	validates_presence_of :username, :message => "A MAC Address is required"
+	validates_presence_of :user, :message => "You must specify the name of the person who this account belongs to"
 	validates_with_method :expiration
-  validates_with_method :validate_username_unique
-  validates_with_method :validate_username_format
+	validates_with_method :validate_username_unique
+	validates_with_method :validate_username_format
 
 	private
 

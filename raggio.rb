@@ -1,6 +1,9 @@
 require 'rubygems'
-require 'sinatra'
+require 'bundler'
+Bundler.setup
+
 require 'yaml'
+require 'sinatra'
 require File.dirname(__FILE__) + '/lib/active_directory_user'
 require File.dirname(__FILE__) + '/models'
 require 'rack-flash'
@@ -102,7 +105,7 @@ end
 
 post "/login" do
 	user = ActiveDirectoryUser.authenticate(params[:username], params[:password]) #attempt to authenticate
-	if !user.nil? && user.member_of?(settings.admin_group)
+	if !user.nil? && user.member_of?
 		flash[:notice] = "Login Successful"
 		session[:username] = params[:username]
 		redirect "/dashboard"
