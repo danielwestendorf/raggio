@@ -99,6 +99,9 @@ get '/stale' do #find stale accounts from teh dashboard view
 	users.each do |u|
 		last_contact = Accounting.all(:username => u.username, :order => [:acctstarttime.desc]).first #find the accounts last hit on the server
 		@old_accounts << last_contact if last_contact && last_contact.acctstarttime <= DateTime.now - stale_cutoff #if the last hit is older than the stale_cutoff, add it to the olde accounts array
+		if last_contact.nil? && u.updated_at <= DateTime.now - stale_cutoff
+			@old_accounts << Accounting.new(:username => u.username, :acctstarttime => u.updated_at, :calledstationid => 'NEVER AUTHENTICATED', :callingstationid => 'NEVER AUTHENTICATED')
+		end
 	end
 	@old_accounts.to_json
 end

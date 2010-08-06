@@ -188,8 +188,8 @@ class Accounting
 	end
 	
 	def nas
-		return "Unknown" if @nasipaddress.empty?
-		h = Socket.getaddrinfo(@nasipaddress, nil) #Attempt to resolve the Hostname of the device
+		return "Unknown" if (@nasipaddress && @nasipaddress.empty?) || @nasipaddress.nil?
+		h = Socket.getaddrinfo(@nasipaddress, nil) if @nasipaddress.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/) #Attempt to resolve the Hostname of the device
 		unless h[0].empty? && h[0][2].empty?
 			return h[0][2]
 		else
