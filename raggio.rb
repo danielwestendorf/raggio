@@ -14,6 +14,7 @@ use Rack::Flash
 config = YAML::load(File.read(File.dirname(__FILE__) + '/config/other.yml'))
 set :head_title, config["other"]["head_title"]
 set :dashboard_title, config["other"]["dashboard_title"]
+set :index_content, config["other"]["index_content"]
 set :logo, config['other']['logo_url']
 set :error_img, config['other']['error_500_url']
 
@@ -82,6 +83,7 @@ end
 
 get '/' do
 	@title = settings.dashboard_title
+	@content = settings.index_content
 	erb :index
 end
 
