@@ -53,7 +53,6 @@ end
 #update
 post '/mac_addresses/edit' do
 	@mac_address = MacAddress.get(params[:id])
-	@mac_address.created_by = session[:username]
 	if @mac_address.update(params)
 		flash[:notice] = "MAC Address successfully updated"
 		redirect "/mac_addresses/#{@mac_address.id}"

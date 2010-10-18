@@ -33,7 +33,7 @@
 				<span class="label comment">Comment:</span> <textarea class="comment" name="comment" rows="4" cols="30"><%= @user.comment if @user %></textarea>
 			</p><br />
 			<% if @user && !@user.new? %>
-				<input name="id" type="hidden" value="<%= @user.id if @user %>" />
+				<input name="id" type="hidden" value="<%= @user.id if @user %>" /><input name="created_by" type="hidden" value="<%= session[:username] %>" />
 			<% end %>
 			<p>
 				<input type="submit" class="submit" value="SAVE"/>

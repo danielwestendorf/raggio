@@ -57,7 +57,6 @@ end
 #update
 post '/users/edit' do
 	@user = User.get(params[:id])
-	@user.created_by = session[:username] #update the person who last touched the record
 	if @user.update(params)
 		flash[:notice] = "User successfully updated"
 		redirect "/users/#{@user.id}"

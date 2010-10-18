@@ -28,7 +28,7 @@
 				<span class="label comment">Comment:</span> <textarea class="comment" name="comment" rows="4" cols="30"><%= @mac_address.comment if @mac_address %></textarea>
 			</p><br />
 			<% if @mac_address && !@mac_address.new? %>
-				<input name="id" type="hidden" value="<%= @mac_address.id if @mac_address %>" />
+				<input name="id" type="hidden" value="<%= @mac_address.id if @mac_address %>" /><input name="created_by" type="hidden" value="<%= session[:username] %>" />
 			<% end %>
 			<p>
 				<input type="submit" class="submit" value="SAVE"/>
