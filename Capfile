@@ -17,18 +17,12 @@ server domain, :app
 after "deploy:symlink", "deploy:copy_configs"
 after "deploy:copy_configs", "deploy:copy_images"
 after "deploy", "deploy:restart"
-after "deploy:restart", "deploy:update_crontab"
 
 namespace :deploy do
   task :restart do
     run "touch #{current_path}/tmp/restart.txt" 
   end
   
-  desc "Update the crontab file"
-  task :update_crontab, :roles => :app do
-    run "cd #{release_path} && whenever --update-crontab #{application}"
-  end
-
   desc "Copy the real config YML files to the server"
   task :copy_configs, :roles => :app do
     File.exists?("config/database.yml") ? put(File.read("config/database.yml"), "#{current_path}/config/database.yml") : logger.important("config/database.yml is missing!")
