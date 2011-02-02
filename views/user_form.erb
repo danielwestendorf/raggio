@@ -13,7 +13,7 @@
 				<li>- Enter important details in the <b>Comment</b> section <i>(i.e. Help Request #123456, Visitor Joe Smith)</i></li>
 			</ul>
 		</div>
-		<form action="<%= @user.new? ? "/users" : "/users/edit" %>" method="post" accept-charset="utf-8">
+		<form action="<%= @user.new? ? "/authenticated/users" : "/authenticated/users/edit" %>" method="post" accept-charset="utf-8">
 			<p>
 				<span class="label username">Username:</span> <input class="username" type="text" name="username" value="<%= @user.username if @user %>"/>
 			</p><br />

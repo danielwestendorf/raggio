@@ -276,6 +276,7 @@ table a, .more, #index a {
 	font-weight: bold;
 	color: #D2312A;
 	text-decoration: none;
+  background-color: #eee;
 }
 
 #login input[type="submit"]:hover, #logout a:hover {

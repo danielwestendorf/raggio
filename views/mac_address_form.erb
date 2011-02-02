@@ -1,6 +1,6 @@
 <div class="content">
 	<div class="title">
-		<a class="button" href="/mac_addresses">CANCEL</a><%= @title %>
+		<a class="button" href="/authenticated/mac_addresses">CANCEL</a><%= @title %>
 	</div>
 	<div class="body clearfix">
 		<%= error_messages_for(@mac_address) %>
@@ -14,7 +14,7 @@
 				<li>- Enter important details in the <b>Comment</b> section <i>(i.e. Help Request #123456, Visitor Joe Smith)</i></li>
 			</ul>
 		</div>
-		<form action="<%= @mac_address.new? ? "/mac_addresses" : "/mac_addresses/edit" %>" method="post" accept-charset="utf-8">
+		<form action="<%= @mac_address.new? ? "/authenticated/mac_addresses" : "/authenticated/mac_addresses/edit" %>" method="post" accept-charset="utf-8">
 			<p>
 				<span class="label username">MAC Address:</span> <input class="username" id="macAddress" type="text" name="username" value="<%= @mac_address.username ||= "00:00:00:00:00:00" if @mac_address %>"/>
 			</p><br />

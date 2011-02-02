@@ -17,7 +17,7 @@ function getStales() {
 	$.ajax({
 		type: "GET",
 		dataType: 'json',
-		url	: "/stale",
+		url	: "/authenticated/stale",
 		data: "stale_cutoff=" + $('#staleForm input[type="text"]').val(),
 		success: function(json) {
 			table = $('#stales tbody:last')
@@ -30,7 +30,7 @@ function getStales() {
         if (username.match(/^([0-9a-f]{2}([-]|$)){6}$/i)){
           username = username.replace(/-/g, ":").toUpperCase()
         }
-				table.append('<tr class="hidden"><td><a href="/users/'+username+'">'+username+'</a></td><td>'+date+'</td><td>'+this.nas+'</td><td>'+ssid+'</td></tr>')
+				table.append('<tr class="hidden"><td><a href="/authenticated/users/'+username+'">'+username+'</a></td><td>'+date+'</td><td>'+this.nas+'</td><td>'+ssid+'</td></tr>')
 			})
 			showRows('#stales tr.hidden')
 		}
@@ -90,13 +90,12 @@ $(document).ready(function() {
 	$('a.destroyUser').click(function() { //Destroy ajax call. Not unobtrousive, but who really runs with JS disabled anyway? Screw them...
 		var answer = confirm("Are you sure you want to delete this account?")
 		if (answer == true) {
-			var href = $(this).attr("href").split("/")
+			var href = $(this).attr("href")
 			$.ajax({
 				type: "DELETE",
-				data: "id=" + href[2],
-				url: "/" + href[1],
+				url: href,
 				success: function() {
-					window.location = "/" + href[1]
+					window.location = "/authenticated/" + href.split('/')[2]
 				}
 			})
 			return false;
@@ -108,7 +107,6 @@ $(document).ready(function() {
 		return false
 	})
 	showRows('tr.hidden')
-	getStales();
 })
 
 

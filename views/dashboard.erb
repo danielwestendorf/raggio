@@ -12,7 +12,7 @@
 			</tr>
 			<% @updated_accounts.each do |user| %>
 				<tr>
-					<td class="account"><a href="/users/<%= user.id %>"><%= user.username unless user.mac_address %><%= user.username.gsub(/-/, ":").upcase if user.mac_address %></a></td>
+					<td class="account"><a href="/authenticated/users/<%= user.id %>"><%= user.username unless user.mac_address %><%= user.username.gsub(/-/, ":").upcase if user.mac_address %></a></td>
 					<td class="account"><%= user.user %></td>
 					<td class="date"><%= format(user.updated_at) %></td>
 					<td class="createdBy"><%= user.created_by %></td>
@@ -25,7 +25,7 @@
 </div>
 <div class="content">
 	<div class="title">
-		<form action="/stale" method="get"  id="staleForm" accept-charset="utf-8">
+		<form action="/authenticated/stale" method="get"  id="staleForm" accept-charset="utf-8">
 			Accounts that have been stale for <input type="text" name="stale_cutoff" value="60" size="1" maxlength="4"/> days <input type="submit" value="FIND" class="submit"/>
 		</form>
 		FIND STALE ACCOUNTS
@@ -45,6 +45,7 @@
 		</table>
 	</div>
 </div>
+<% if false %>
 <div class="content">
 	<div class="title">RECENT AUTHENTICATION ATTEMPTS</div>
 	<div class="body">
@@ -57,7 +58,7 @@
 			<% @recent_authentications.each do |id| %>
 			<% auth = History.get(id.id) %>
 				<tr>
-					<td><a href="/users/<%= auth.username %>"><%= auth.username %></a></td>
+					<td><a href="/authenticated/users/<%= auth.username %>"><%= auth.username %></a></td>
 					<td><%= format(DateTime.parse(auth.authdate)) %></td>
 					<td><%= auth.reply %></td>
 				</tr>
@@ -65,3 +66,4 @@
 		</table>
 	</div>
 </div>
+<% end %>

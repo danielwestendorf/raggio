@@ -1,23 +1,23 @@
 #new
-get '/mac_addresses/new' do
+get '/authenticated/mac_addresses/new' do
 	@title = "NEW MAC ADDRESS"
 	@mac_address ||= MacAddress.new
 	erb :mac_address_form
 end
 
 #index
-get '/mac_addresses' do
+get '/authenticated/mac_addresses' do
 	@title = "MAC ADDRESSES"
 	@mac_addresses = MacAddress.all(:mac_address => true, :order => [:username.asc])
 	erb :mac_addresses
 end
 
 #show
-get '/mac_addresses/:id' do
+get '/authenticated/mac_addresses/:id' do
 	@mac_address = MacAddress.get(params[:id])
 	if !@mac_address
 		flash[:error] = "MAC Address not found"
-		redirect '/mac_addresses'
+		redirect '/authenticated/mac_addresses'
 	else
 		@download_total = Accounting.new(:acctoutputoctets => Accounting.sum(:acctoutputoctets, :username => @mac_address.username.gsub(/:/, "-").downcase)).download
 		@history = History.all(:username => @mac_address.username.gsub(/:/, "-"), :order => [:authdate.desc], :limit => 10)
@@ -27,12 +27,12 @@ get '/mac_addresses/:id' do
 end
 
 #create
-post '/mac_addresses' do
+post '/authenticated/mac_addresses' do
 	@mac_address = MacAddress.new(params)
 	@mac_address.created_by = session[:username]
 	if @mac_address.save
 		flash[:notice] = "MAC Address successfully created"
-		redirect "/mac_addresses/#{@mac_address.id}"
+		redirect "/authenticated/mac_addresses/#{@mac_address.id}"
 	else
 		@title = "NEW MAC ADDRESS"
 		erb :mac_address_form
@@ -40,22 +40,22 @@ post '/mac_addresses' do
 end
 
 #edit
-get '/mac_addresses/:id/edit' do
+get '/authenticated/mac_addresses/:id/edit' do
 	@title = "EDIT MAC ADDRESS"
 	@mac_address = MacAddress.get(params[:id])
 	if !@mac_address
 		flash[:error] = "MAC Address not found"
-		redirect '/mac_addresses'
+		redirect '/authenticated/mac_addresses'
 	end
 	erb :mac_address_form
 end
 
 #update
-post '/mac_addresses/edit' do
+post '/authenticated/mac_addresses/edit' do
 	@mac_address = MacAddress.get(params[:id])
 	if @mac_address.update(params)
 		flash[:notice] = "MAC Address successfully updated"
-		redirect "/mac_addresses/#{@mac_address.id}"
+		redirect "/authenticated/mac_addresses/#{@mac_address.id}"
 	else
 		@title = "EDIT MAC ADDRESS"
 		erb :mac_address_form
@@ -63,7 +63,7 @@ post '/mac_addresses/edit' do
 end
 
 #destroy
-delete '/mac_addresses' do
+delete '/authenticated/mac_addresses/:id' do
 	@mac_address = MacAddress.get(params[:id])
 	if @mac_address && @mac_address.destroy
 		flash[:notice] = "Successfully deleted MAC Address #{@mac_address.username}"

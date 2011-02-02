@@ -19,26 +19,12 @@ set :logo, config['other']['logo_url']
 set :error_img, config['other']['error_500_url']
 
 
-#don't require login to access these resources
-whitelist = [
-	"/", #route
-	"/login", #route
-	"/logout", #route
-	"/images", #asset
-	"/stale", #asset
-	"/js", #asset
-	"/css", #asset
-	"/favicon.ico" #asset
-]
-
-before do
-	split = request.path.split("/")
-	split.empty? ? path = "/" : path = "/" + split[1] #grab the path being requested
-	if !whitelist.include?(path) && !session[:username] #if the path isn't whitelisted and there isn't a username session variable do the following
+before "/authenticated/*" do
+	if !session[:username] #if the path isn't whitelisted and there isn't a username session variable do the following
 		session[:request_path] = request.path #remember where the user wants to go, if they login with the next request we'll take them there
 		flash[:error] = "You are required to log in before you can proceed"
 		redirect "/"
-	elsif session[:request_path] && session[:username] && !whitelist.include?(path) #if it isn't white listed and the user is logged in and there was a previously requested path, redirect them to that path.
+	elsif session[:request_path] && session[:username] #if it isn't white listed and the user is logged in and there was a previously requested path, redirect them to that path.
 		path = session[:request_path]
 		session[:request_path] = nil
 		redirect path
@@ -87,14 +73,14 @@ get '/' do
 	erb :index
 end
 
-get '/dashboard' do
+get '/authenticated/dashboard' do
 	@title = "DASHBOARD"
 	@updated_accounts = User.all(:order => [:updated_at.desc], :limit => 10)
-	@recent_authentications = repository(:default).adapter.select('(SELECT id, username, authdate FROM (SELECT id, username, authdate FROM ' + settings.history_table + ' GROUP BY username ORDER BY authdate DESC) AS A LIMIT 20)') #Get the latest record for the top 20 authentication attempts on the radius server **this will break when the History table is not called radpostauth**
+ #	@recent_authentications = repository(:default).adapter.select('(SELECT id, username, authdate FROM (SELECT id, username, authdate FROM ' + settings.history_table + ' GROUP BY username ORDER BY authdate DESC) AS A LIMIT 20)') #Get the latest record for the top 20 authentication attempts on the radius server **this will break when the History table is not called radpostauth**
 	erb :dashboard
 end
 
-get '/stale' do #find stale accounts from teh dashboard view
+get '/authenticated/stale' do #find stale accounts from teh dashboard view
 	params[:stale_cutoff].nil? ? stale_cutoff = 60 : stale_cutoff = params[:stale_cutoff].to_i #if a blank form is sent, insert 60
 	users = User.all
 	@old_accounts = User.all(:limit => 2).clear #don't know how to create a Datamapper collection? This will work for now.
@@ -113,20 +99,20 @@ post "/login" do
 	if !user.nil? && user.member_of?
 		flash[:notice] = "Login Successful"
 		session[:username] = params[:username]
-		redirect "/dashboard"
+		redirect "/authenticated/dashboard"
 	else
 		flash[:error] = "Login Failed"
 		redirect "/"
 	end
 end
 
-get "/logout" do
+get "/authenticated/logout" do
 	session[:username] = nil
 	flash[:notice] = "Successfully logged out"
 	redirect "/"
 end
 
-post "/search" do
+post "/authenticated/search" do
 	searchString = "%" + params[:search].gsub(/:/, "-") + "%"
 	@results = MacAddress.all(:username.like => searchString)
 	q2 = MacAddress.all(:comment.like => searchString)

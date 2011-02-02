@@ -17,7 +17,7 @@
 					<td class="date"><%= user.created_by %></td>
 					<td class="date"><%= expire_format(user.expiration_date) %> @ 12 PM</td>
 					<td class="comment"><%= user.comment %></td>
-					<td><a href="/users/<%= user.id %>">SHOW</a> | <a href="/users/<%= user.id %>/edit">EDIT</a> | <a class="destroyUser" href="/users/<%= user.id %>">DESTROY</a></td>
+					<td><a href="/authenticated/users/<%= user.id %>">SHOW</a> | <a href="/authenticated/users/<%= user.id %>/edit">EDIT</a> | <a class="destroyUser" href="/authenticated/users/<%= user.id %>">DESTROY</a></td>
 				</tr>
 			<% end %>
 		</table>

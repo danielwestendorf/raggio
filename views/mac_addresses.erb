@@ -1,6 +1,6 @@
 <div class="content">
 	<div class="title">
-		<a class="button" href="/mac_addresses/new">NEW MAC ADDRESS</a><%= @title %>		
+		<a class="button" href="/authenticated/mac_addresses/new">NEW MAC ADDRESS</a><%= @title %>		
 	</div>
 	<div class="body">
 		<table>
@@ -17,7 +17,7 @@
 					<td class="date"><%= mac_address.created_by %></td>
 					<td class="date"><%= expire_format(mac_address.expiration_date) %> @ 12PM</td>
 					<td class="comment"><%= mac_address.comment %></td>
-					<td><a href="/mac_addresses/<%= mac_address.id %>">SHOW</a> | <a href="/mac_addresses/<%= mac_address.id %>/edit">EDIT</a> | <a class="destroyUser" href="/mac_addresses/<%= mac_address.id %>">DESTROY</a></td>
+					<td><a href="/authenticated/mac_addresses/<%= mac_address.id %>">SHOW</a> | <a href="/authenticated/mac_addresses/<%= mac_address.id %>/edit">EDIT</a> | <a class="destroyUser" href="/authenticated/mac_addresses/<%= mac_address.id %>">DESTROY</a></td>
 				</tr>
 			<% end %>
 		</table>

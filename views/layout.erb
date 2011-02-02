@@ -26,20 +26,20 @@
 					</form>
 				<% else %>
 					<div id="logout">
-						<a href="/logout">LOGOUT</a>
+						<a href="/authenticated/logout">LOGOUT</a>
 					</div>
 				<% end %>
 			</div>
 		</div>
 		<div id="nav">
 			<div id="search">
-				<form action="/search" method="post" accept-charset="utf-8">
+				<form action="/authenticated/search" method="post" accept-charset="utf-8">
 					<input id="searchbar" type="text" name="search"/><input type="submit" class="button" value="SEARCH"/>
 				</form>
 			</div>
-			<a href="/dashboard">DASHBOARD</a>
-			<a href="/mac_addresses">MAC ADDRESSES</a>
-			<a href="/users">USER ACCOUNTS</a>
+			<a href="/authenticated/dashboard">DASHBOARD</a>
+			<a href="/authenticated/mac_addresses">MAC ADDRESSES</a>
+			<a href="/authenticated/users">USER ACCOUNTS</a>
 		</div>
 		<% if flash[:error] %>
 			<div id="flash_error"><img src="/images/Delete.png"/><%= flash[:error] %></div>
